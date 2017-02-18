@@ -1,7 +1,6 @@
 package example
 
-
-object                                                                                              Lists {
+object Lists {
 
   /**
    * This method computes the sum of all elements in the list xs. There are
@@ -23,13 +22,13 @@ object                                                                          
    * @param xs A list of natural numbers
    * @return The sum of all elements in `xs`
    */
-    def sum(xs: List[Int]): Int = {
-      def helper(acc: Int, lst: List[Int]): Int =
-        if (lst.isEmpty) acc else helper(acc + lst.head, lst.tail)
+  def sum(xs: List[Int]): Int = {
+    def helper(acc: Int, lst: List[Int]): Int =
+      if (lst.isEmpty) acc else helper(acc + lst.head, lst.tail)
 
-      helper(0, xs)
-    }
-  
+    helper(0, xs)
+  }
+
   /**
    * This method returns the largest element in a list of integers. If the
    * list `xs` is empty it throws a `java.util.NoSuchElementException`.
@@ -43,12 +42,12 @@ object                                                                          
    * @return The largest element in `xs`
    * @throws java.util.NoSuchElementException if `xs` is an empty list
    */
-    def max(xs: List[Int]): Int = {
-      if (xs.isEmpty) throw new NoSuchElementException("list cannot be empty")
+  def max(xs: List[Int]): Int = {
+    if (xs.isEmpty) throw new NoSuchElementException("list cannot be empty")
 
-      def helper(max: Int, lst: List[Int]): Int =
-        if (lst.isEmpty) max else helper(if (max > lst.head) max else lst.head, lst.tail)
+    def helper(max: Int, lst: List[Int]): Int =
+      if (lst.isEmpty) max else helper(if (max > lst.head) max else lst.head, lst.tail)
 
-      helper(xs.head, xs.tail)
-    }
+    helper(xs.head, xs.tail)
   }
+}

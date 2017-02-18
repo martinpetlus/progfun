@@ -46,7 +46,6 @@ class FunSetSuite extends FunSuite {
   //   assert(1 + 2 === 3)
   // }
 
-
   import FunSets._
 
   test("contains is implemented") {

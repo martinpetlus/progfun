@@ -25,7 +25,7 @@ import org.scalatest.junit.JUnitRunner
  */
  @RunWith(classOf[JUnitRunner])
   class ListsSuite extends FunSuite {
- 
+
   /**
    * Tests are written using the `test` operator which takes two arguments:
    *
@@ -39,7 +39,6 @@ import org.scalatest.junit.JUnitRunner
    */
   test("one plus one is two")(assert(1 + 1 == 2))
 
-
   /**
    * In Scala, it is allowed to pass an argument to a method using the block
    * syntax, i.e. `{ argument }` instead of parentheses `(argument)`.
@@ -49,7 +48,6 @@ import org.scalatest.junit.JUnitRunner
   test("one plus one is three?") {
     assert(1 + 1 == 2) // This assertion fails! Go ahead and fix it.
   }
-
 
   /**
    * One problem with the previous (failing) test is that ScalaTest will
@@ -93,14 +91,12 @@ import org.scalatest.junit.JUnitRunner
     else x
   }
 
-
   /**
    * Now we finally write some tests for the list functions that have to be
    * implemented for this assignment. We fist import all members of the
    * `List` object.
    */
   import Lists._
-
 
   /**
    * We only provide two very basic tests for you. Write more tests to make
