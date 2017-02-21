@@ -87,4 +87,4 @@ class TweetSetSuite extends FunSuite {
     }
   }
 
-  }
+}
