@@ -138,7 +138,7 @@ class NonEmpty(elem: Tweet, left: TweetSet, right: TweetSet) extends TweetSet {
     else right.filterAcc(p, left.filterAcc(p, acc))
 
   def union(that: TweetSet): TweetSet =
-    ((left union right) union that) incl elem
+    left union (right union (that incl elem))
 
   def mostRetweeted: Tweet = mostRetweetedAcc(elem)
 
@@ -204,14 +204,18 @@ object GoogleVsApple {
   val google = List("android", "Android", "galaxy", "Galaxy", "nexus", "Nexus")
   val apple = List("ios", "iOS", "iphone", "iPhone", "ipad", "iPad")
 
-  lazy val googleTweets: TweetSet = ???
-  lazy val appleTweets: TweetSet = ???
+  lazy val googleTweets: TweetSet = allTweets.filter(
+    (tw) => google.exists((keyword) => tw.text.contains(keyword))
+  )
+  lazy val appleTweets: TweetSet = allTweets.filter(
+    (tw) => apple.exists((keyword) => tw.text.contains(keyword))
+  )
 
   /**
    * A list of all tweets mentioning a keyword from either apple or google,
    * sorted by the number of retweets.
    */
-     lazy val trending: TweetList = ???
+   lazy val trending: TweetList = (googleTweets union appleTweets).descendingByRetweet
   }
 
 object Main extends App {
