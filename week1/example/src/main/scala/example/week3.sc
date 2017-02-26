@@ -58,3 +58,15 @@ nth(0, list)
 nth(1, list)
 nth(2, list)
 nth(3, list)
+
+// Week 4
+object List {
+  def apply[T]() = new Nil
+  def apply[T](a: T): List[T] = new Cons(a, new Nil)
+  def apply[T](a: T, b: T): List[T] = new Cons(a, new Cons(b, new Nil))
+}
+
+//val a: Array[NonEmpty] = Array(new NonEmpty(1, Empty, Empty))
+//val b: Array[IntSet] = a
+//b(0) = Empty
+//val s: NonEmpty = a(0)
