@@ -10,8 +10,15 @@ import patmat.Huffman._
 @RunWith(classOf[JUnitRunner])
 class HuffmanSuite extends FunSuite {
   trait TestTrees {
+    val t0 = Leaf('c', 4)
     val t1 = Fork(Leaf('a',2), Leaf('b',3), List('a','b'), 5)
     val t2 = Fork(Fork(Leaf('a',2), Leaf('b',3), List('a','b'), 5), Leaf('d',4), List('a','b','d'), 9)
+  }
+
+  test("weight of a leaf node") {
+    new TestTrees {
+      assert(weight(t0) === 4)
+    }
   }
 
   test("weight of a larger tree") {
