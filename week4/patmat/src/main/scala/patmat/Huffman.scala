@@ -87,6 +87,13 @@ object Huffman {
     helper(chars, List())
   }
 
+  def insertAscending[T <: CodeTree](node: T, nodes: List[T]): List[T] = nodes match {
+    case Nil => List(node)
+    case x :: xs =>
+      if (weight(node) > weight(x)) x :: insertAscending(node, nodes.tail)
+      else node :: x :: xs
+  }
+
   /**
    * Returns a list of `Leaf` nodes for a given frequency table `freqs`.
    *
@@ -95,15 +102,8 @@ object Huffman {
    * of a leaf is the frequency of the character.
    */
   def makeOrderedLeafList(freqs: List[(Char, Int)]): List[Leaf] = {
-    def insert(node: Leaf, nodes: List[Leaf]): List[Leaf] = nodes match {
-      case Nil => List(node)
-      case Leaf(ch, w) :: xs =>
-        if (weight(node) > w) Leaf(ch, w) :: insert(node, nodes.tail)
-        else node :: Leaf(ch, w) :: xs
-    }
-
     if (freqs.isEmpty) Nil
-    else insert(Leaf(freqs.head._1, freqs.head._2), makeOrderedLeafList(freqs.tail))
+    else insertAscending(Leaf(freqs.head._1, freqs.head._2), makeOrderedLeafList(freqs.tail))
   }
 
   /**
