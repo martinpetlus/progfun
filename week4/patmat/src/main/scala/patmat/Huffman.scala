@@ -72,7 +72,20 @@ object Huffman {
    *       println("integer is  : "+ theInt)
    *   }
    */
-  def times(chars: List[Char]): List[(Char, Int)] = ???
+  def times(chars: List[Char]): List[(Char, Int)] = {
+    def incrementChar(char: Char, pairs: List[(Char, Int)]): List[(Char, Int)] = pairs match {
+      case Nil => List((char, 1))
+      case pair :: rest =>
+        if (pair._1 == char) (char, pair._2 + 1) :: rest
+        else pair :: incrementChar(char, rest)
+    }
+
+    def helper(chars: List[Char], pairs: List[(Char, Int)]): List[(Char, Int)] =
+      if (chars.isEmpty) pairs
+      else helper(chars.tail, incrementChar(chars.head, pairs))
+
+    helper(chars, List())
+  }
 
   /**
    * Returns a list of `Leaf` nodes for a given frequency table `freqs`.
