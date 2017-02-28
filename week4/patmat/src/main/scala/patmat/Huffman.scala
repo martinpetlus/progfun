@@ -170,14 +170,14 @@ object Huffman {
    * the resulting list of characters.
    */
   def decode(root: CodeTree, bits: List[Bit]): List[Char] = {
-    def decodeBits(tree: CodeTree, bits: List[Bit], acc: List[Char]): List[Char] =
-      if (bits.isEmpty) acc
-      else tree match {
-        case Leaf(_, _) => decodeBits(root, bits, acc ::: chars(tree))
-        case Fork(left, right, _, _) =>
-          if (bits.head == 0) decodeBits(left, bits.tail, acc)
-          else decodeBits(right, bits.tail, acc)
-      }
+    def decodeBits(tree: CodeTree, bits: List[Bit], acc: List[Char]): List[Char] = tree match {
+      case Leaf(_, _) =>
+        if (bits.isEmpty) acc ::: chars(tree)
+        else decodeBits(root, bits, acc ::: chars(tree))
+      case Fork(left, right, _, _) =>
+        if (bits.head == 0) decodeBits(left, bits.tail, acc)
+        else decodeBits(right, bits.tail, acc)
+    }
 
     decodeBits(root, bits, Nil)
   }
@@ -206,7 +206,17 @@ object Huffman {
    * This function encodes `text` using the code tree `tree`
    * into a sequence of bits.
    */
-  def encode(tree: CodeTree)(text: List[Char]): List[Bit] = ???
+  def encode(root: CodeTree)(text: List[Char]): List[Bit] = {
+    def encodeChar(tree: CodeTree, char: Char): List[Bit] = tree match {
+      case Leaf(_, _) => Nil
+      case Fork(left, right, _, _) =>
+        if (chars(left).contains(char)) 0 :: encodeChar(left, char)
+        else 1 :: encodeChar(right, char)
+    }
+
+    if (text.isEmpty) Nil
+    else encodeChar(root, text.head) ::: encode(root)(text.tail)
+  }
 
   // Part 4b: Encoding using code table
 
