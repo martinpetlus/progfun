@@ -27,6 +27,8 @@ object Anagrams {
    */
   val dictionary: List[Word] = loadDictionary
 
+  def sortOccurrences(occurrences: Occurrences) = occurrences sortWith (_._1 < _._1)
+
   /** Converts the word into its character occurrence list.
    *
    *  Note: the uppercase and lowercase version of the character are treated as the
@@ -37,7 +39,7 @@ object Anagrams {
   def wordOccurrences(w: Word): Occurrences = {
     val m = w groupBy (_.toLower)
     val p = m map {case (key: Char, value: String) => (key, value.length)}
-    p.toList.sortWith (_._1 < _._1)
+    sortOccurrences(p.toList)
   }
 
   /** Converts a sentence into its character occurrence list. */
@@ -110,11 +112,10 @@ object Anagrams {
    *  and has no zero-entries.
    */
   def subtract(x: Occurrences, y: Occurrences): Occurrences =
-    y.foldLeft(x.toMap)((m, pair) => {
+    sortOccurrences(y.foldLeft(x.toMap)((m, pair) => {
       if (m(pair._1) == pair._2) m - pair._1
       else m + (pair._1 -> (m(pair._1) - pair._2))
-    }).toList
-
+    }).toList)
 
   /** Returns a list of all anagram sentences of the given sentence.
    *
@@ -156,5 +157,18 @@ object Anagrams {
    *
    *  Note: There is only one anagram of an empty sentence.
    */
-  def sentenceAnagrams(sentence: Sentence): List[Sentence] = ???
+  def sentenceAnagrams(sentence: Sentence): List[Sentence] = {
+    def findAnagrams(x: Occurrences): List[Sentence] =
+      if (x.isEmpty)
+        List(List())
+      else
+        for {
+          c <- combinations(x)
+          if dictionaryByOccurrences contains c
+          a <- findAnagrams(subtract(x, c))
+          w <- dictionaryByOccurrences(c)
+        } yield w :: a
+
+    findAnagrams(sentenceOccurrences(sentence))
+  }
 }
