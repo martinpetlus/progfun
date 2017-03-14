@@ -40,5 +40,14 @@ object Lists {
    * @return The largest element in `xs`
    * @throws java.util.NoSuchElementException if `xs` is an empty list
    */
-  def max(xs: List[Int]): Int = ???
+  def max(xs: List[Int]): Int = {
+    if (xs.isEmpty) throw new NoSuchElementException("list cannot be empty")
+
+    def findMax(max: Int, ys: List[Int]): Int = ys match {
+      case Nil => max
+      case y :: ys1 => findMax(if (max > y) max else y, ys1)
+    }
+
+    findMax(xs.head, xs.tail)
+  }
 }
