@@ -39,4 +39,14 @@ abstract class QuickCheckHeap extends Properties("Heap") with IntHeap {
     findMin(insert(m, h)) == m
   }
 
+  property("gen2") = forAll { h: H =>
+    def checkMinOrder(hh: H, prev: Int): Boolean =
+      if (isEmpty(hh)) true
+      else if (prev > findMin(hh)) false
+      else checkMinOrder(deleteMin(hh), findMin(hh))
+
+    if (isEmpty(h)) true
+    else checkMinOrder(deleteMin(h), findMin(h))
+  }
+
 }
