@@ -1,5 +1,7 @@
 package calculator
 
+import Math.sqrt
+
 object Polynomial {
   def computeDelta(a: Signal[Double], b: Signal[Double],
       c: Signal[Double]): Signal[Double] = {
@@ -8,6 +10,12 @@ object Polynomial {
 
   def computeSolutions(a: Signal[Double], b: Signal[Double],
       c: Signal[Double], delta: Signal[Double]): Signal[Set[Double]] = {
-    ???
+    Signal {
+      if (delta() < 0) Set()
+      else Set(
+        ((-b() + sqrt(delta())) / 2 * a()),
+        ((-b() - sqrt(delta())) / 2 * a())
+      )
+    }
   }
 }
