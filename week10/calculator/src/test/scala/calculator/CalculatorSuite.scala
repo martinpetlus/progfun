@@ -53,11 +53,15 @@ class CalculatorSuite extends FunSuite with ShouldMatchers {
   }
 
   test("checkExpr: a = a") {
-    assert(checkExpr("a", Ref("a"), Map()) == false)
+    assert(checkExpr(Set("a"), Ref("a"), Map()) == false)
   }
 
   test("checkExpr: a = b, b = a") {
-    assert(checkExpr("a", Ref("b"), Map("b" -> Signal(Ref("a")))) == false)
+    assert(checkExpr(Set("a"), Ref("b"), Map("b" -> Signal(Ref("a")))) == false)
+  }
+
+  test("checkExpr: a = a, b = a") {
+    assert(checkExpr(Set("b"), Ref("a"), Map("a" -> Signal(Ref("a")))) == false)
   }
 
 }

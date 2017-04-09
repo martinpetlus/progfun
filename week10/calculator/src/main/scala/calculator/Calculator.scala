@@ -9,22 +9,22 @@ final case class Times(a: Expr, b: Expr) extends Expr
 final case class Divide(a: Expr, b: Expr) extends Expr
 
 object Calculator {
-  def checkExpr(name: String, expr: Expr, refs: Map[String, Signal[Expr]]): Boolean = expr match {
+  def checkExpr(names: Set[String], expr: Expr, refs: Map[String, Signal[Expr]]): Boolean = expr match {
     case Literal(v) => true
-    case Ref(n) =>
-      if (name == n) false
-      else checkExpr(name, getReferenceExpr(n, refs), refs)
-    case Plus(a, b) => checkExpr(name, a, refs) && checkExpr(name, b, refs)
-    case Minus(a, b) => checkExpr(name, a, refs) && checkExpr(name, b, refs)
-    case Times(a, b) => checkExpr(name, a, refs) && checkExpr(name, b, refs)
-    case Divide(a, b) => checkExpr(name, a, refs) && checkExpr(name, b, refs)
+    case Ref(name) =>
+      if (names(name)) false
+      else checkExpr(names + name, getReferenceExpr(name, refs), refs)
+    case Plus(a, b) => checkExpr(names, a, refs) && checkExpr(names, b, refs)
+    case Minus(a, b) => checkExpr(names, a, refs) && checkExpr(names, b, refs)
+    case Times(a, b) => checkExpr(names, a, refs) && checkExpr(names, b, refs)
+    case Divide(a, b) => checkExpr(names, a, refs) && checkExpr(names, b, refs)
   }
 
   def computeValues(
       namedExpressions: Map[String, Signal[Expr]]): Map[String, Signal[Double]] = {
     namedExpressions.map {
       case (name, exprSignal) => name -> Signal {
-        if (checkExpr(name, exprSignal(), namedExpressions))
+        if (checkExpr(Set(name), exprSignal(), namedExpressions))
           eval(exprSignal(), namedExpressions)
         else
           Double.NaN
