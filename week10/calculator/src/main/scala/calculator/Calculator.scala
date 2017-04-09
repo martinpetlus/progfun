@@ -15,7 +15,14 @@ object Calculator {
   }
 
   def eval(expr: Expr, references: Map[String, Signal[Expr]]): Double = {
-    ???
+    expr match {
+      case Literal(v) => v
+      case Ref(name) => eval(getReferenceExpr(name, references), references)
+      case Plus(a, b) => eval(a, references) + eval(b, references)
+      case Minus(a, b) => eval(a, references) - eval(b, references)
+      case Times(a, b) => eval(a, references) * eval(b, references)
+      case Divide(a, b) => eval(a, references) / eval(b, references)
+    }
   }
 
   /** Get the Expr for a referenced variables.
