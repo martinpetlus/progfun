@@ -9,9 +9,27 @@ final case class Times(a: Expr, b: Expr) extends Expr
 final case class Divide(a: Expr, b: Expr) extends Expr
 
 object Calculator {
+  def checkExpr(name: String, expr: Expr, refs: Map[String, Signal[Expr]]): Boolean = expr match {
+    case Literal(v) => true
+    case Ref(n) =>
+      if (name == n) false
+      else checkExpr(name, getReferenceExpr(n, refs), refs)
+    case Plus(a, b) => checkExpr(name, a, refs) && checkExpr(name, b, refs)
+    case Minus(a, b) => checkExpr(name, a, refs) && checkExpr(name, b, refs)
+    case Times(a, b) => checkExpr(name, a, refs) && checkExpr(name, b, refs)
+    case Divide(a, b) => checkExpr(name, a, refs) && checkExpr(name, b, refs)
+  }
+
   def computeValues(
       namedExpressions: Map[String, Signal[Expr]]): Map[String, Signal[Double]] = {
-    namedExpressions.mapValues(exprSignal => Signal(eval(exprSignal(), namedExpressions)))
+    namedExpressions.map {
+      case (name, exprSignal) => name -> Signal {
+        if (checkExpr(name, exprSignal(), namedExpressions))
+          eval(exprSignal(), namedExpressions)
+        else
+          Double.NaN
+      }
+    }
   }
 
   def eval(expr: Expr, references: Map[String, Signal[Expr]]): Double = {

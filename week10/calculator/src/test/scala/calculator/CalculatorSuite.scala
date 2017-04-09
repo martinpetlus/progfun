@@ -8,6 +8,7 @@ import org.scalatest.junit.JUnitRunner
 import org.scalatest._
 
 import TweetLength.MaxTweetLength
+import Calculator._
 
 @RunWith(classOf[JUnitRunner])
 class CalculatorSuite extends FunSuite with ShouldMatchers {
@@ -49,6 +50,14 @@ class CalculatorSuite extends FunSuite with ShouldMatchers {
     assert(resultRed1() == "red")
     val resultRed2 = TweetLength.colorForRemainingCharsCount(Var(-5))
     assert(resultRed2() == "red")
+  }
+
+  test("checkExpr: a = a") {
+    assert(checkExpr("a", Ref("a"), Map()) == false)
+  }
+
+  test("checkExpr: a = b, b = a") {
+    assert(checkExpr("a", Ref("b"), Map("b" -> Signal(Ref("a")))) == false)
   }
 
 }
